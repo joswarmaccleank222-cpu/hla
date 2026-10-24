@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para mi niña hermosa ❤️ - Katherine</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Playfair Display, Cormorant Garamond, Great Vibes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-burgundy: #4a0e17;
+            --color-burgundy-dark: #2d080e;
+            --color-gold: #d4af37;
+            --color-gold-light: #f3e5ab;
+            --color-paper: #fcf8f2;
+            --color-paper-shadow: #e8dfd1;
+            --color-text: #3a2226;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background-color: #120305;
+            color: var(--color-text);
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        .font-title {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-script {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        /* 3D Book Container Styles */
+        .stage {
+            perspective: 1800px;
+            perspective-origin: 50% 50%;
+        }
+
+        .book-wrapper {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+
+        /* Page Turn 3D Effect */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transform-style: preserve-3d;
+            transform-origin: left center;
+            transition: transform 0.85s cubic-bezier(0.645, 0.045, 0.355, 1), z-index 0s 0.42s;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+            backface-visibility: hidden;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Page Front & Back */
+        .page-front, .page-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            backface-visibility: hidden;
+            overflow: hidden;
+            border-radius: 4px 12px 12px 4px;
+        }
+
+        .page-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Flip states */
+        .page.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        /* Book spine shadow effect */
+        .page-front::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 22px;
+            background: linear-gradient(to right, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 100%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .page-back::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 22px;
+            background: linear-gradient(to left, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 100%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Fluid typography & dynamic line spacing for perfect scaling */
+        .fluid-paragraph {
+            font-size: clamp(0.875rem, 2.4vw + 0.2rem, 1.25rem);
+            line-height: clamp(1.35, 1.1vw + 1.2, 1.6);
+            hyphens: auto;
+            word-break: break-word;
+        }
+
+        /* Custom Scrollbar in case screen is extremely tiny */
+        .custom-scroll::-webkit-scrollbar {
+            width: 3px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(212, 175, 55, 0.08);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: var(--color-gold);
+            border-radius: 4px;
+        }
+
+        /* Floating Hearts Particles */
+        .heart-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 5;
+            animation: floatUp 4s linear forwards;
+            opacity: 0.8;
+            color: #e63946;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.5) rotate(0deg);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        .pulse-glow {
+            animation: pulseGlow 2.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between items-center relative select-none antialiased overflow-x-hidden py-3 px-2 sm:px-6">
+
+    <!-- Ambient Floating Background Effect -->
+    <div id="heartContainer" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <!-- Top Header & Ambient Audio Controls -->
+    <header class="w-full max-w-2xl flex justify-between items-center z-20 px-4 py-2 mb-1 bg-black/50 backdrop-blur-md rounded-full border border-amber-900/40 text-amber-100/90 shadow-lg">
+        <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-book-heart text-amber-400 text-sm sm:text-base"></i>
+            <span class="font-title font-semibold text-xs sm:text-sm tracking-wide text-amber-200">Para Katherine</span>
+        </div>
+        
+        <div class="flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm">
+            <!-- Audio Toggle Button -->
+            <button id="musicBtn" class="flex items-center space-x-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-amber-900/50 hover:bg-amber-800/60 border border-amber-500/30 transition-all text-amber-200" title="Música romántica de fondo">
+                <i id="musicIcon" class="fa-solid fa-music text-xs"></i>
+                <span id="musicText" class="hidden sm:inline text-xs">Música: Off</span>
+            </button>
+
+            <!-- Floating Hearts Toggle -->
+            <button id="particlesBtn" class="flex items-center space-x-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-amber-900/50 hover:bg-amber-800/60 border border-amber-500/30 transition-all text-amber-200" title="Efecto de corazones">
+                <i class="fa-solid fa-heart text-red-400 text-xs"></i>
+                <span id="particlesText" class="hidden sm:inline text-xs">Corazones</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Flipbook Container Area -->
+    <main class="w-full flex-1 flex flex-col items-center justify-center relative my-auto z-10 stage py-1">
+        <!-- Dynamic Book Aspect Frame - Fully Responsive Scaling -->
+        <div id="book" class="book-wrapper w-[92vw] max-w-[380px] sm:max-w-[440px] md:max-w-[480px] h-[75vh] min-h-[460px] max-h-[640px] relative">
+            <!-- Pages generated dynamically -->
+        </div>
+    </main>
+
+    <!-- Navigation & Bottom Controls -->
+    <footer class="w-full max-w-md flex flex-col items-center z-20 px-3 mt-1 space-y-2">
+        <!-- Progress Bar -->
+        <div class="w-full bg-amber-950/60 h-1.5 rounded-full overflow-hidden border border-amber-800/40">
+            <div id="progressBar" class="bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-300 h-full w-0 transition-all duration-300"></div>
+        </div>
+
+        <div class="w-full flex justify-between items-center">
+            <!-- Previous Button -->
+            <button id="prevBtn" class="flex items-center space-x-1.5 px-3.5 py-2 rounded-full bg-amber-950/80 hover:bg-amber-900/90 text-amber-200 border border-amber-600/40 shadow-lg disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+                <span class="text-xs font-semibold tracking-wide">Anterior</span>
+            </button>
+
+            <!-- Page Number Indicator -->
+            <div class="text-amber-200/90 text-xs font-title px-3.5 py-1 rounded-full bg-black/60 border border-amber-900/50 backdrop-blur-sm">
+                <span id="currentPageNum" class="text-amber-400 font-bold">1</span> / <span id="totalPagesNum">13</span>
+            </div>
+
+            <!-- Next Button -->
+            <button id="nextBtn" class="flex items-center space-x-2 px-3.5 py-2 rounded-full bg-amber-950/80 hover:bg-amber-900/90 text-amber-200 border border-amber-600/40 shadow-lg disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95">
+                <span class="text-xs font-semibold tracking-wide">Siguiente</span>
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+        </div>
+
+        <p class="text-[10px] sm:text-xs text-amber-300/60 text-center font-sans">
+            Desliza o usa las flechas del teclado <i class="fa-solid fa-arrows-left-right mx-1"></i> para cambiar de página
+        </p>
+    </footer>
+
+    <!-- Audio Synth Logic & Application Scripts -->
+    <script>
+        // Exact text content from the guide document
+        const bookPages = [
+            {
+                type: 'cover',
+                title: 'Para mi niña hermosa ❤️',
+                subtitle: 'Katherine',
+                footer: 'Hecho con todo mi amor'
+            },
+            {
+                type: 'content',
+                pageNum: 1,
+                text: 'Mi amor, quiero dedicarte estas palabras porque siento que decirte simplemente gracias se queda demasiado corto para todo lo que quiero expresarte.'
+            },
+            {
+                type: 'content',
+                pageNum: 2,
+                text: 'Quiero que sepás lo mucho que valoro la manera en que estuviste para mí cuando no me sentía bien. Me escuchaste, me recordaste que estaba haciendo las cosas bien, me dijiste cosas tan bonitas y me hiciste sentir querido en un momento en el que necesitaba precisamente eso. Quizá para vos fueron palabras que te nacieron del corazón y que dijiste porque me amás, pero quiero que entendás que para mí significaron muchísimo más de lo que imaginás.'
+            },
+            {
+                type: 'content',
+                pageNum: 3,
+                text: 'A veces uno necesita que alguien le recuerde las cosas buenas que tiene, que le haga ver que está intentando hacer las cosas bien y que, aunque haya momentos difíciles, eso no significa que todo lo esté haciendo mal. Y vos, mi amor, tuviste esa manera tan bonita de hacerme sentir mejor. No tenías que resolver mis problemas ni encontrar las palabras perfectas para cada cosa que me pasaba. Bastó con que me escucharas, con que me hablaras con cariño y con que me recordaras que me amás.'
+            },
+            {
+                type: 'content',
+                pageNum: 4,
+                text: 'Y es que una de las cosas que más agradezco de tenerte en mi vida es precisamente eso: poder encontrar en vos a una persona con la que puedo hablar, desahogarme y ser yo mismo. Alguien que no solamente está para compartir mis alegrías, sino que también puede acompañarme cuando las cosas no salen como quisiera. No sabés lo bonito que es sentir que, además de tener a la mujer que amo, tengo a alguien que se preocupa por mí, que me escucha y que quiere verme bien.'
+            },
+            {
+                type: 'content',
+                pageNum: 5,
+                text: 'Quiero que sepás que yo también veo las cosas bonitas que hay en vos, amor. Veo tu cariño, tu forma de preocuparte por mí y esos pequeños detalles que quizá hacés sin pensar demasiado, pero que terminan significando un mundo para mí. No quiero acostumbrarme tanto a tu amor que termine dando por sentado lo que hacés por mí. Al contrario, quiero aprender a valorar cada vez más esas cosas, porque sé que detrás de ellas hay una persona que me ama y que también merece sentirse querida, cuidada y apreciada.'
+            },
+            {
+                type: 'content',
+                pageNum: 6,
+                text: 'Si pudiera pedir algo para nuestra relación, sería que nunca dejemos de ser ese lugar seguro el uno para el otro. Que podamos hablar cuando algo nos duela, escucharnos cuando necesitemos desahogarnos y recordarnos, incluso en los momentos complicados, que seguimos teniendo a nuestro lado a una persona que nos ama. Yo quiero ser eso para vos, mi niña. Quiero que también podás encontrar tranquilidad en mí, que sintás que podés contar conmigo y que nunca tengás que guardar lo que sentís por miedo a molestarme.'
+            },
+            {
+                type: 'content',
+                pageNum: 7,
+                text: 'Gracias por escucharme, por tus palabras tan bonitas, por recordarme que soy bueno y que estoy haciendo las cosas bien. Gracias por decirme que me amás y por hacerme sentir ese amor de una manera tan sincera. Puede parecer algo sencillo, pero para mí no lo es. Son esas cosas las que me recuerdan lo afortunado que soy de compartir mi vida con vos.'
+            },
+            {
+                type: 'content',
+                pageNum: 8,
+                text: 'Te amo muchísimo, Katherine. Y si algo quiero que te quede claro después de leer esta carta, es que no tenés que hacer cosas extraordinarias para demostrarme lo importante que sos para mí. Muchas veces, simplemente siendo vos, con tu manera de escucharme, de hablarme y de quererme, conseguís tocar mi corazón de una forma que no sé explicar del todo.'
+            },
+            {
+                type: 'content',
+                pageNum: 9,
+                text: 'Espero que yo también pueda hacerte sentir así de amada, que pueda devolverte toda esa ternura y que, cuando seas vos quien tenga un día difícil, encontrés en mí esos abrazos, esas palabras y esa compañía que te ayuden a recordar lo maravillosa que sos.'
+            },
+            {
+                type: 'content',
+                pageNum: 10,
+                text: 'Gracias por ser vos, mi amor. Gracias por quererme de esa manera y por recordarme, con algo tan bonito como tus palabras, lo que significa tener a alguien que de verdad quiere verte bien.'
+            },
+            {
+                type: 'content',
+                pageNum: 11,
+                text: 'Te amo con todo mi corazón, mi niña hermosa. Y si hay algo que deseo que nunca olvidés, es que yo también quiero ser ese hombre que te cuide, que te escuche, que te valore y que te elija una y otra vez. Porque no solamente estoy enamorado de vos; también estoy profundamente agradecido de tenerte en mi vida. ❤️'
+            },
+            {
+                type: 'backcover',
+                text: 'Con todo mi amor, siempre ❤️'
+            }
+        ];
+
+        let currentPage = 0;
+        const totalPages = bookPages.length;
+        const bookEl = document.getElementById('book');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const currentPageNumEl = document.getElementById('currentPageNum');
+        const totalPagesNumEl = document.getElementById('totalPagesNum');
+        const progressBar = document.getElementById('progressBar');
+
+        totalPagesNumEl.textContent = totalPages;
+
+        // Render Book Pages with optimized flexbox layout to guarantee text fits
+        function renderBook() {
+            bookEl.innerHTML = '';
+
+            bookPages.forEach((data, index) => {
+                const pageEl = document.createElement('div');
+                pageEl.className = `page`;
+                pageEl.style.zIndex = totalPages - index;
+
+                const frontEl = document.createElement('div');
+                frontEl.className = 'page-front flex flex-col justify-between p-3 sm:p-5 md:p-6';
+
+                if (data.type === 'cover') {
+                    frontEl.style.backgroundColor = 'var(--color-burgundy)';
+                    frontEl.style.color = '#fcf8f2';
+                    frontEl.innerHTML = `
+                        <div class="h-full w-full border-2 border-amber-400/60 rounded p-4 sm:p-6 flex flex-col justify-between items-center text-center relative bg-gradient-to-b from-[#5c121d] via-[#4a0e17] to-[#2d080e]">
+                            <div class="absolute top-2 left-2 text-amber-400/40 text-[10px]">◆</div>
+                            <div class="absolute top-2 right-2 text-amber-400/40 text-[10px]">◆</div>
+                            <div class="absolute bottom-2 left-2 text-amber-400/40 text-[10px]">◆</div>
+                            <div class="absolute bottom-2 right-2 text-amber-400/40 text-[10px]">◆</div>
+
+                            <div class="mt-2 sm:mt-4">
+                                <div class="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-4 rounded-full border border-amber-400/40 flex items-center justify-center bg-amber-900/20">
+                                    <i class="fa-solid fa-heart text-amber-400 text-xl sm:text-2xl pulse-glow"></i>
+                                </div>
+                                <h1 class="font-title text-xl sm:text-2xl md:text-3xl font-bold tracking-wide text-amber-200 leading-snug drop-shadow-md px-1">
+                                    ${data.title}
+                                </h1>
+                            </div>
+
+                            <div class="my-auto py-2">
+                                <span class="font-script text-3xl sm:text-4xl md:text-5xl text-amber-300 block my-1">${data.subtitle}</span>
+                                <div class="w-20 h-0.5 bg-gradient-to-r from-transparent via-amber-400/60 to-transparent mx-auto mt-1"></div>
+                            </div>
+
+                            <div class="mb-2">
+                                <p class="text-[10px] sm:text-xs font-light text-amber-100/80 tracking-widest uppercase">
+                                    ${data.footer}
+                                </p>
+                            </div>
+                        </div>
+                    `;
+                } else if (data.type === 'content') {
+                    frontEl.style.backgroundColor = 'var(--color-paper)';
+                    frontEl.style.color = 'var(--color-text)';
+                    frontEl.innerHTML = `
+                        <div class="h-full w-full border border-amber-900/20 rounded p-3 sm:p-5 flex flex-col justify-between relative bg-gradient-to-b from-[#fdfbf7] via-[#fcf8f2] to-[#f7f0e6] overflow-hidden">
+                            <!-- Page Top Accent -->
+                            <div class="flex justify-between items-center pb-1.5 border-b border-amber-900/10 flex-shrink-0">
+                                <span class="text-amber-800/40 text-xs font-script">❤️</span>
+                                <span class="text-amber-900/40 text-[9px] sm:text-[10px] uppercase tracking-widest font-serif">Para Katherine</span>
+                            </div>
+
+                            <!-- Text Container with Dynamic Scaling & Overflow Scroll Backup -->
+                            <div class="my-auto py-2 flex-1 flex items-center justify-center overflow-y-auto custom-scroll w-full">
+                                <p class="fluid-paragraph text-justify font-serif text-[#3a2226] font-medium px-1 sm:px-2 w-full">
+                                    ${data.text}
+                                </p>
+                            </div>
+
+                            <!-- Page Bottom Number -->
+                            <div class="pt-1.5 border-t border-amber-900/10 flex justify-center items-center flex-shrink-0">
+                                <span class="font-title text-[10px] sm:text-xs text-amber-900/60 font-semibold tracking-widest">${data.pageNum}</span>
+                            </div>
+                        </div>
+                    `;
+                } else if (data.type === 'backcover') {
+                    frontEl.style.backgroundColor = 'var(--color-burgundy)';
+                    frontEl.style.color = '#fcf8f2';
+                    frontEl.innerHTML = `
+                        <div class="h-full w-full border-2 border-amber-400/60 rounded p-5 flex flex-col justify-center items-center text-center relative bg-gradient-to-b from-[#5c121d] via-[#4a0e17] to-[#2d080e]">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full border border-amber-400/40 flex items-center justify-center bg-amber-900/30">
+                                <i class="fa-solid fa-heart text-amber-400 text-2xl pulse-glow"></i>
+                            </div>
+                            <h2 class="font-title text-lg sm:text-2xl text-amber-200 font-semibold leading-relaxed mb-2 px-2">
+                                ${data.text}
+                            </h2>
+                            <div class="w-16 h-0.5 bg-amber-400/50 mx-auto mt-2"></div>
+                        </div>
+                    `;
+                }
+
+                // Page Back Texture
+                const backEl = document.createElement('div');
+                backEl.className = 'page-back p-4';
+                backEl.style.backgroundColor = (data.type === 'cover' || data.type === 'backcover') ? 'var(--color-burgundy-dark)' : 'var(--color-paper-shadow)';
+                backEl.innerHTML = `<div class="h-full w-full opacity-10 flex items-center justify-center"><i class="fa-solid fa-heart text-amber-900 text-5xl"></i></div>`;
+
+                pageEl.appendChild(frontEl);
+                pageEl.appendChild(backEl);
+
+                // Click handler for book pages
+                pageEl.addEventListener('click', (e) => {
+                    const scrollContainer = e.target.closest('.custom-scroll');
+                    if (scrollContainer && scrollContainer.scrollHeight > scrollContainer.clientHeight + 10) {
+                        return; // Allow scrolling inside text if overflow occurs on tiny screens
+                    }
+                    if (index === currentPage) {
+                        nextPage();
+                    } else if (index === currentPage - 1) {
+                        prevPage();
+                    }
+                });
+
+                bookEl.appendChild(pageEl);
+            });
+
+            updateBookState();
+        }
+
+        function updateBookState() {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach((page, index) => {
+                if (index < currentPage) {
+                    page.classList.add('flipped');
+                    page.style.zIndex = index + 1;
+                } else {
+                    page.classList.remove('flipped');
+                    page.style.zIndex = totalPages - index;
+                }
+            });
+
+            currentPageNumEl.textContent = currentPage + 1;
+            const progress = ((currentPage + 1) / totalPages) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage === totalPages - 1;
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                playPageTurnSound();
+                updateBookState();
+                spawnHeartsBurst();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                playPageTurnSound();
+                updateBookState();
+            }
+        }
+
+        prevBtn.addEventListener('click', prevPage);
+        nextBtn.addEventListener('click', nextPage);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                prevPage();
+            }
+        });
+
+        // Touch Swipe Handling
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 35;
+            if (touchStartX - touchEndX > swipeThreshold) {
+                nextPage();
+            } else if (touchEndX - touchStartX > swipeThreshold) {
+                prevPage();
+            }
+        }
+
+        // --- Audio Synthesizer (Web Audio API) ---
+        let audioCtx = null;
+        let isMusicPlaying = false;
+        let musicInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playPageTurnSound() {
+            try {
+                initAudio();
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const bufferSize = audioCtx.sampleRate * 0.12;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(700, audioCtx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.12);
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                noise.start();
+            } catch (e) {}
+        }
+
+        const musicBtn = document.getElementById('musicBtn');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicText = document.getElementById('musicText');
+
+        const romanticNotes = [
+            [261.63, 329.63, 392.00, 493.88], // Cmaj7
+            [220.00, 261.63, 329.63, 392.00], // Am7
+            [174.61, 220.00, 261.63, 329.63], // Fmaj7
+            [196.00, 246.94, 293.66, 392.00]  // G7
+        ];
+        let chordIndex = 0;
+
+        function playRomanticChord() {
+            if (!isMusicPlaying || !audioCtx) return;
+
+            const now = audioCtx.currentTime;
+            const chord = romanticNotes[chordIndex];
+            chordIndex = (chordIndex + 1) % romanticNotes.length;
+
+            chord.forEach((freq) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now);
+
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(0.025, now + 1.4);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 3.6);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now);
+                osc.stop(now + 3.8);
+            });
+        }
+
+        function toggleMusic() {
+            initAudio();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            isMusicPlaying = !isMusicPlaying;
+
+            if (isMusicPlaying) {
+                musicIcon.className = "fa-solid fa-volume-high text-amber-400 text-xs";
+                musicText.textContent = "Música: On";
+                playRomanticChord();
+                musicInterval = setInterval(playRomanticChord, 3600);
+            } else {
+                musicIcon.className = "fa-solid fa-music text-xs";
+                musicText.textContent = "Música: Off";
+                if (musicInterval) clearInterval(musicInterval);
+            }
+        }
+
+        musicBtn.addEventListener('click', toggleMusic);
+
+        // --- Particles ---
+        const heartContainer = document.getElementById('heartContainer');
+        const particlesBtn = document.getElementById('particlesBtn');
+        let particlesEnabled = true;
+        let heartTimer = null;
+
+        function createHeart() {
+            if (!particlesEnabled) return;
+            const heart = document.createElement('i');
+            heart.className = 'fa-solid fa-heart heart-particle';
+            
+            const size = Math.random() * 14 + 8;
+            const left = Math.random() * 100;
+            const duration = Math.random() * 3 + 3;
+
+            heart.style.left = `${left}vw`;
+            heart.style.fontSize = `${size}px`;
+            heart.style.animationDuration = `${duration}s`;
+            heart.style.color = Math.random() > 0.4 ? '#e63946' : '#d4af37';
+
+            heartContainer.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, duration * 1000);
+        }
+
+        function spawnHeartsBurst() {
+            for (let i = 0; i < 4; i++) {
+                setTimeout(createHeart, i * 120);
+            }
+        }
+
+        function toggleParticles() {
+            particlesEnabled = !particlesEnabled;
+            if (particlesEnabled) {
+                particlesBtn.classList.remove('opacity-50');
+                heartTimer = setInterval(createHeart, 900);
+            } else {
+                particlesBtn.classList.add('opacity-50');
+                if (heartTimer) clearInterval(heartTimer);
+                heartContainer.innerHTML = '';
+            }
+        }
+
+        particlesBtn.addEventListener('click', toggleParticles);
+
+        window.onload = function() {
+            renderBook();
+            heartTimer = setInterval(createHeart, 900);
+        };
+
+        window.onresize = function() {
+            updateBookState();
+        };
+    </script>
+</body>
+</html>
